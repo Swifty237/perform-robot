@@ -102,8 +102,6 @@ const getRapidapiApiData = async () => {
         const response = await fetch(apiFighter, options);
         let fighterDetails = await response.json();
 
-        // console.log(fighterDetails.results);
-
         if (fighterDetails.error == undefined) {
 
             for (let fighterDetail of fighterDetails.results) {
