@@ -143,17 +143,17 @@ apiRouter.route('/update').
 
         try {
 
-            // await getSportsdataApiData();
-            // getFigthersNames(eventDetailsData);
-            // await getRapidapiApiData();
+            await getSportsdataApiData();
+            getFigthersNames(eventDetailsData);
+            await getRapidapiApiData();
             await getNewsapiApiData();
 
-            // await EventModel.deleteMany();
-            // await FighterModel.deleteMany();
+            await EventModel.deleteMany();
+            await FighterModel.deleteMany();
             await UfcNewsModel.deleteMany();
 
-            // await EventModel.insertMany(eventDetailsData);
-            // await FighterModel.insertMany(fighterDetailsData);
+            await EventModel.insertMany(eventDetailsData);
+            await FighterModel.insertMany(fighterDetailsData);
             await UfcNewsModel.insertMany(ufcNewsArticles);
 
 
