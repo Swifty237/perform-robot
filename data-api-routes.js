@@ -135,7 +135,7 @@ const getNewsapiApiData = async () => {
     }
 }
 
-// Route pour mettre à jour les données depuis l'API
+// Route pour mettre à jour les données de la base données mongodb
 apiRouter.route('/update').
     get(async (req, res) => {
 
