@@ -38,10 +38,10 @@ const mongoDbUrl = process.env.MONGODB_URI;
 mongoose.connect(mongoDbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    authSource: process.env.AUTH_SOURCE,
-    user: process.env.DB_USER,
-    pass: process.env.PASS,
-    dbName: process.env.DBNAME
+    authSource: process.env.MONGODB_AUTH_SOURCE,
+    user: process.env.MONGODB_USER,
+    pass: process.env.MONGODB_PASSWORD,
+    dbName: process.env.MONGODB_DBNAME
 });
 
 const db = mongoose.connection;
@@ -211,6 +211,6 @@ app.get('/update', async (req, res) => {
 
 // app.use(ufcDataApiRoutes.apiRouter);
 
-app.listen(process.env.PORT_HOST, () => {
-    console.log("http://localhost:" + process.env.PORT_HOST);
+app.listen(process.env.BOT_ACCESS_PORT, () => {
+    console.log(process.env.BOT_ACCESS_URI);
 });
