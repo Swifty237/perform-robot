@@ -4,7 +4,7 @@ EXPOSE 3001
 
 WORKDIR app
 
-COPY package.json package.json
+COPY package*.json ./
 COPY server.js server.js
 COPY models models
 
