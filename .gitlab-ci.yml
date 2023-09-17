@@ -1,18 +1,13 @@
+#image: my_image
+#
 #stages:
-#  - start_back
 #  - local_build
-
-#node_back:
-#  stage: start_back
-#  image: my_image
 #
 #local:
 #  stage: local_build
 #  image: docker:latest
 #  services:
-#    - docker:dind
-#  dependencies:
-#    - node_back 
+#    - docker:dind 
 #  script:
 #    - export FRONT_ACCESS_URI=$FRONT_ACCESS_URI
 #    - export BACK_NODE_ACCESS_PORT=$BACK_NODE_ACCESS_PORT
