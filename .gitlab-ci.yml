@@ -8,8 +8,9 @@
 #  services:
 #    - docker:dind 
 #  script:
-#    - export FRONT_ACCESS_URI=$FRONT_ACCESS_URI
-#    - export BACK_NODE_ACCESS_PORT=$BACK_NODE_ACCESS_PORT
+#    - export ALLOWED_ACCESS_URI=$ALLOWED_ACCESS_URI
+#    - export BOT_ACCESS_PORT=$BOT_ACCESS_PORT
+#    - export BOT_ACCESS_URI=$BOT_ACCESS_URI
 #    - export MONGODB_URI=$MONGODB_URI
 #    - export MONGODB_AUTH_SOURCE=$MONGODB_AUTH_SOURCE
 #    - export MONGODB_USER=$MONGODB_USER
