@@ -17,7 +17,7 @@ local:
     - export MONGODB_PASSWORD=$MONGODB_PASSWORD
     - export MONGODB_DBNAME=$MONGODB_DBNAME
     - docker login -u $CI_REGISTRY_USER -p $PERS_ACCESS_TOKEN $CI_REGISTRY
-    - docker pull registry.gitlab.com/Swifty237/perform-back-nodejs/perform-back-nodejs:latest
+    - docker pull registry.gitlab.com/yannick_isika23p4/perform-back-nodejs/perform-back-nodejs:latest
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker logout
