@@ -1,10 +1,19 @@
-image: docker:latest
-
 stages:
+  - start_back
   - local_build
+
+node_back:
+  stage: start_back
+  image: mongo:latest
+  script:
+    - mongod --bind_ip_all --fork --logpath /var/log/mongod.log
+    - export MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+    - export MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    - export MONGO_INITDB_DATABASE=$MONGODB_DBNAME
 
 local:
   stage: local_build
+  image: registry.gitlab.com/yannick_isika23p4/perform-back-nodejs/perform-back-nodejs
   services:
     - docker:dind 
   script:
@@ -20,7 +29,6 @@ local:
     - docker login -u $CI_REGISTRY_USER -p $PERS_ACCESS_TOKEN $CI_REGISTRY
     - echo $CI_REGISTRY_USER
     - echo $CI_REGISTRY
-    - docker pull $CI_REGISTRY/perform-back-nodejs/perform-back-nodejs
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker logout
