@@ -34,15 +34,17 @@ app.use((req, res, next) => {
 
 const mongoDbUrl = process.env.MONGODB_URI;
 
+mongoose.connect(mongoDbUrl);
+
 // Connexion à la base de données MongoDB
-mongoose.connect(mongoDbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    authSource: process.env.MONGODB_AUTH_SOURCE,
-    user: process.env.MONGODB_USER,
-    pass: process.env.MONGODB_PASSWORD,
-    dbName: process.env.MONGODB_DBNAME
-});
+// mongoose.connect(mongoDbUrl, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     authSource: process.env.MONGODB_AUTH_SOURCE,
+//     user: process.env.MONGODB_USER,
+//     pass: process.env.MONGODB_PASSWORD,
+//     dbName: process.env.MONGODB_DBNAME
+// });
 
 const db = mongoose.connection;
 
