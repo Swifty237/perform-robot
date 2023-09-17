@@ -2,6 +2,8 @@ stages:
   - start_back
   - local_build
 
+image: docker:latest
+
 node_back:
   stage: start_back
   services:
