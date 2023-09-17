@@ -1,4 +1,4 @@
-# image: registry.gitlab.com/yannick_isika23p4/perform-back-nodejs/perform-back-nodejs
+image: registry.gitlab.com/yannick_isika23p4/perform-back-nodejs/perform-back-nodejs
 
 stages:
   - local_build
