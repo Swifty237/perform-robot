@@ -13,6 +13,7 @@ stages:
 
 local:
   stage: local_build
+  image: docker:latest
   services:
     - docker:dind 
   script:
