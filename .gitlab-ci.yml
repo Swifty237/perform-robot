@@ -1,7 +1,13 @@
-image: registry.gitlab.com/yannick_isika23p4/perform-back-nodejs/perform-back-nodejs:latest
-
 stages:
+  - start_back
   - local_build
+
+node_back:
+  stage: start_back
+  services:
+    - docker:dind
+  script:
+    - docker run registry.gitlab.com/yannick_isika23p4/perform-back-nodejs/perform-back-nodejs
 
 local:
   stage: local_build
@@ -22,3 +28,5 @@ local:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker logout
+  dependencies: 
+      - node_back
