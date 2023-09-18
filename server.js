@@ -62,7 +62,7 @@ let ufcNewsArticles = [];
 const getYears = () => {
     const years = [];
 
-    for (let i = 2018; i < 2023; i++) {
+    for (let i = 2021; i < 2023; i++) {
         years.push(i);
     }
 
@@ -94,87 +94,87 @@ const getFigthersNames = (tabJson) => {
 
 const getSportsdataApiData = async () => {
 
-    console.log("Fetch api.sportsdata.io...");
+    // console.log("Fetch api.sportsdata.io...");
 
     // for (let year of getYears()) {
 
-    // const apiEventsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Schedule/UFC/' + 2023 + '?key=' + process.env.SPORTSDATA_API_KEY;
-    // const response = await fetch(apiEventsUrl);
-    // const events = await response.json();
+    const apiEventsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Schedule/UFC/' + 2023 + '?key=' + process.env.SPORTSDATA_API_KEY;
+    const response = await fetch(apiEventsUrl);
+    const events = await response.json();
 
-    // if (events) {
-    //     for (let event of events) {
-    //         eventsData.push(event);
-    //     }
-    // } else {
-    //     console.error("Erreur lors de la création de eventsData : " + events);
-    // }
+    if (events) {
+        for (let event of events) {
+            eventsData.push(event);
+        }
+    } else {
+        console.error("Erreur lors de la création de eventsData : " + events);
+    }
     // }
 
-    // for (let event of eventsData) {
-    //     const apiEventDetailsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Event/' + event.EventId + '?key=' + process.env.SPORTSDATA_API_KEY;
-    //     const response = await fetch(apiEventDetailsUrl);
-    //     const eventDetails = await response.json();
+    for (let event of eventsData) {
+        const apiEventDetailsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Event/' + event.EventId + '?key=' + process.env.SPORTSDATA_API_KEY;
+        const response = await fetch(apiEventDetailsUrl);
+        const eventDetails = await response.json();
 
-    //     console.log(eventDetails);
-    //     eventDetailsData.push(eventDetails);
-    // }
+        console.log(eventDetails);
+        eventDetailsData.push(eventDetails);
+    }
 }
 
 const getRapidapiApiData = async () => {
 
-    console.log("Fetch mma-stats.p.rapidapi.com...");
+    // console.log("Fetch mma-stats.p.rapidapi.com...");
 
-    // for (let fighter of fighters) {
+    for (let fighter of fighters) {
 
-    //     console.log(fighter);
+        console.log(fighter);
 
-    //     const apiFighter = 'https://mma-stats.p.rapidapi.com/search?name=' + fighter.FirstName + " " + fighter.LastName;
-    //     const options = {
-    //         method: 'GET',
-    //         headers: {
-    //             'X-RapidAPI-Key': process.env.RAPIDAPI_API_KEY,
-    //             'X-RapidAPI-Host': 'mma-stats.p.rapidapi.com'
-    //         },
-    //         timeout: 300000
-    //     };
+        const apiFighter = 'https://mma-stats.p.rapidapi.com/search?name=' + fighter.FirstName + " " + fighter.LastName;
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': process.env.RAPIDAPI_API_KEY,
+                'X-RapidAPI-Host': 'mma-stats.p.rapidapi.com'
+            },
+            timeout: 300000
+        };
 
-    //     const response = await fetch(apiFighter, options);
-    //     let fighterDetails = await response.json();
+        const response = await fetch(apiFighter, options);
+        let fighterDetails = await response.json();
 
-    //     if (fighterDetails.error == undefined) {
+        if (fighterDetails.error == undefined) {
 
-    //         for (let fighterDetail of fighterDetails.results) {
+            for (let fighterDetail of fighterDetails.results) {
 
-    //             // Ajout de l'attribut FighterId
-    //             fighterDetail.FighterId = fighter.FighterId;
-    //             fighterDetailsData.push(fighterDetail);
-    //         }
-    //     } else {
-    //         console.log(fighterDetails.error + " : " + fighter.FirstName + "" + fighter.LastName);
-    //     }
-    // }
+                // Ajout de l'attribut FighterId
+                fighterDetail.FighterId = fighter.FighterId;
+                fighterDetailsData.push(fighterDetail);
+            }
+        } else {
+            console.log(fighterDetails.error + " : " + fighter.FirstName + "" + fighter.LastName);
+        }
+    }
 }
 
 const getNewsapiApiData = async () => {
 
-    console.log("Fetch newsapi.org/v2...")
+    // console.log("Fetch newsapi.org/v2...");
 
-    // const apiUfcNews = 'https://newsapi.org/v2/everything?q=ufc&from=2023&sources=espn';
-    // const options = {
-    //     method: 'GET',
-    //     headers: {
-    //         'X-Api-Key': process.env.NEWSAPI_API_KEY,
-    //     }
-    // };
-    // const response = await fetch(apiUfcNews, options);
-    // let ufcNews = await response.json();
+    const apiUfcNews = 'https://newsapi.org/v2/everything?q=ufc&from=2023&sources=espn';
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-Api-Key': process.env.NEWSAPI_API_KEY,
+        }
+    };
+    const response = await fetch(apiUfcNews, options);
+    let ufcNews = await response.json();
 
-    // console.log("status : " + ufcNews.status);
+    console.log("status : " + ufcNews.status);
 
-    // if (ufcNews.status == "ok") {
-    //     ufcNewsArticles = ufcNews.articles;
-    // }
+    if (ufcNews.status == "ok") {
+        ufcNewsArticles = ufcNews.articles;
+    }
 }
 
 app.get('/update', async (req, res) => {
@@ -187,14 +187,13 @@ app.get('/update', async (req, res) => {
         await getRapidapiApiData();
         await getNewsapiApiData();
 
-        // await EventModel.deleteMany();
-        // await FighterModel.deleteMany();
-        // await UfcNewsModel.deleteMany();
+        await EventModel.deleteMany();
+        await FighterModel.deleteMany();
+        await UfcNewsModel.deleteMany();
 
-        // await EventModel.insertMany(eventDetailsData);
-        // await FighterModel.insertMany(fighterDetailsData);
-        // await UfcNewsModel.insertMany(ufcNewsArticles);
-
+        await EventModel.insertMany(eventDetailsData);
+        await FighterModel.insertMany(fighterDetailsData);
+        await UfcNewsModel.insertMany(ufcNewsArticles);
 
         res.json({ message: 'Database updated' })
 
@@ -210,8 +209,6 @@ app.get('/update', async (req, res) => {
     }
 
 });
-
-// app.use(ufcDataApiRoutes.apiRouter);
 
 app.listen(process.env.BOT_ACCESS_PORT, () => {
     console.log(process.env.BOT_ACCESS_URI);
