@@ -17,7 +17,7 @@ const fighterSchema = mongoose.Schema({
     'Last Fight': [Object],
     'Fighter Facts': [],
     'UFC History': [],
-    FighterId: Number
+    FighterId: String
 });
 
 export default mongoose.model("Fighter", fighterSchema);
