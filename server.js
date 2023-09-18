@@ -103,12 +103,18 @@ const getSportsdataApiData = async () => {
     const events = await response.json();
 
     if (events) {
-        for (let event of events) {
-            eventsData.push(event);
-        }
+        eventsData.push(events);
     } else {
         console.error("Erreur lors de la création de eventsData : " + events);
     }
+
+    // if (events) {
+    //     for (let event of events) {
+    //         eventsData.push(event);
+    //     }
+    // } else {
+    //     console.error("Erreur lors de la création de eventsData : " + events);
+    // }
     // }
 
     for (let event of eventsData) {
