@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const eventDetailDataSchema = mongoose.Schema({
-    EventId: String,
-    LeagueId: String,
+    EventId: Number,
+    LeagueId: Number,
     Name: String,
     ShortName: String,
-    Season: String,
+    Season: Number,
     Day: Date,
     DateTime: Date,
     Status: String,
