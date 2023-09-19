@@ -88,7 +88,7 @@ const getRapidapiApiData = async () => {
         const options = {
             method: 'GET',
             headers: {
-                'X-RapidAPI-Key': process.env.RAPIDAPI_API_KEY,
+                'X-RapidAPI-Key': process.env.RAPIDAPI_API_KEY2,
                 'X-RapidAPI-Host': 'mma-stats.p.rapidapi.com'
             },
             timeout: 300000
