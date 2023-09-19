@@ -1,20 +1,7 @@
 stages:
-  - ldeploy
   - pdeploy
   - dregistry
-
-local:
-  image: node:18.17.1
-  stage: ldeploy
-  script:
-    - npm install
-    - export MONGODB_AUTH_SOURCE=admin
-    - export LOCAL_MONGODB_URI=$LOCAL_MONGODB_URI
-    - export LOCAL_MONGODB_USER=user_admin
-    - export LOCAL_MONGODB_PASSWORD=password
-    - export LOCAL_MONGODB_DBNAME=test_db
-    - node index.js
-
+  
 prod:
   image: node:18.17.1
   stage: pdeploy
