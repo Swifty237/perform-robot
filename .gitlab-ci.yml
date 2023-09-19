@@ -1,8 +1,9 @@
 stages:
-  - local_build
+  - dregistry
+  - deploy
 
-local:
-  stage: local_build
+push:
+  stage: dregistry
   image: docker:latest
   services:
     - docker:dind 
@@ -11,3 +12,30 @@ local:
     - docker build -t $DOCKERHUB_USERNAME/$DOCKERHUB_IMAGE .
     - docker push $DOCKERHUB_USERNAME/$DOCKERHUB_IMAGE
     - docker logout
+
+local:
+  image: node:18.17.1
+  stage: deploy
+  script:
+    - npm install
+    - export MONGODB_AUTH_SOURCE=admin
+    - export LOCAL_MONGODB_URI=mongodb://localhost:27017
+    - export LOCAL_MONGODB_USER=user_admin
+    - export LOCAL_MONGODB_PASSWORD=password
+    - export LOCAL_MONGODB_DBNAME=test_db
+    - node index.js
+
+prod:
+  image: node:18.17.1
+  stage: deploy
+  script:
+    - npm install
+    - MONGODB_AUTH_SOURCE=$MONGODB_AUTH_SOURCE
+    - export PROD_MONGODB_URI=$PROD_MONGODB_URI
+    - export PROD_MONGODB_DBNAME=$PROD_MONGODB_DBNAME
+    - export SPORTSDATA_API_KEY=$SPORTSDATA_API_KEY
+    - export SPORTSDATA_API_KEY2=$SPORTSDATA_API_KEY2
+    - export RAPIDAPI_API_KEY=$RAPIDAPI_API_KEY
+    - export RAPIDAPI_API_KEY2=$RAPIDAPI_API_KEY2
+    - export NEWSAPI_API_KEY=$NEWSAPI_API_KEY
+    - node index.js
