@@ -9,7 +9,7 @@ local:
   script:
     - npm install
     - export MONGODB_AUTH_SOURCE=admin
-    - export LOCAL_MONGODB_URI="mongodb://localhost:27017"
+    - export LOCAL_MONGODB_URI=$LOCAL_MONGODB_URI
     - export LOCAL_MONGODB_USER=user_admin
     - export LOCAL_MONGODB_PASSWORD=password
     - export LOCAL_MONGODB_DBNAME=test_db
