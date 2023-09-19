@@ -137,41 +137,71 @@ const launchUpdateDatabase = async () => {
 
     try {
 
-        await getSportsdataApiData();
-        getFigthersNames(eventDetailsData);
-        await getRapidapiApiData();
-        await getNewsapiApiData();
+        // await getSportsdataApiData();
+        // getFigthersNames(eventDetailsData);
+        // await getRapidapiApiData();
+        // await getNewsapiApiData();
 
-        const mongoDbUrl = process.env.MONGODB_URI;
+        if (process.env.LOCAL_MONGODB_USER && process.env.LOCAL_MONGODB_URI && process.env.LOCAL_MONGODB_PASSWORD) {
 
-        // mongoose.connect(mongoDbUrl);
+            const mongoDbUrl = process.env.LOCAL_MONGODB_URI;
 
-        // Connexion à la base de données MongoDB
-        mongoose.connect(mongoDbUrl, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            authSource: process.env.MONGODB_AUTH_SOURCE ? process.env.MONGODB_AUTH_SOURCE : "",
-            user: process.env.MONGODB_USER ? process.env.MONGODB_USER : "",
-            pass: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD : "",
-            dbName: process.env.MONGODB_DBNAME ? process.env.MONGODB_DBNAME : ""
-        });
+            // Connexion à la base de données MongoDB
+            mongoose.connect(mongoDbUrl, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                authSource: process.env.MONGODB_AUTH_SOURCE,
+                user: process.env.LOCAL_MONGODB_USER,
+                pass: process.env.LOCAL_MONGODB_PASSWORD,
+                dbName: process.env.LOCAL_MONGODB_DBNAME
+            });
 
-        const db = mongoose.connection;
+            const db = mongoose.connection;
 
-        db.on('error', console.error.bind(console, 'Erreur de connexion à MongoDB :'));
-        db.once('open', () => {
-            console.log('Connecté à MongoDB');
-        });
+            db.on('error', console.error.bind(console, 'Erreur de connexion à MongoDB :'));
+            db.once('open', () => {
+                console.log('Connecté à MongoDB => local');
+            });
 
-        await EventModel.deleteMany();
-        await FighterModel.deleteMany();
-        await UfcNewsModel.deleteMany();
+            // await EventModel.deleteMany();
+            // await FighterModel.deleteMany();
+            // await UfcNewsModel.deleteMany();
 
-        await EventModel.insertMany(eventDetailsData);
-        await FighterModel.insertMany(fighterDetailsData);
-        await UfcNewsModel.insertMany(ufcNewsArticles);
+            // await EventModel.insertMany(eventDetailsData);
+            // await FighterModel.insertMany(fighterDetailsData);
+            // await UfcNewsModel.insertMany(ufcNewsArticles);
 
-        db.close();
+            db.close();
+
+        } else {
+
+            const mongoDbUrl = process.env.PROD_MONGODB_URI;
+
+            // Connexion à la base de données MongoDB
+            mongoose.connect(mongoDbUrl, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                authSource: process.env.MONGODB_AUTH_SOURCE,
+                dbName: process.env.PROD_MONGODB_DBNAME
+            });
+
+            const db = mongoose.connection;
+
+            db.on('error', console.error.bind(console, 'Erreur de connexion à MongoDB :'));
+            db.once('open', () => {
+                console.log('Connecté à MongoDB => Prod');
+            });
+
+            // await EventModel.deleteMany();
+            // await FighterModel.deleteMany();
+            // await UfcNewsModel.deleteMany();
+
+            // await EventModel.insertMany(eventDetailsData);
+            // await FighterModel.insertMany(fighterDetailsData);
+            // await UfcNewsModel.insertMany(ufcNewsArticles);
+
+            db.close();
+        }
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour :', error);
