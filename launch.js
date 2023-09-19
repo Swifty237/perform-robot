@@ -137,10 +137,10 @@ const launchUpdateDatabase = async () => {
 
     try {
 
-        // await getSportsdataApiData();
-        // getFigthersNames(eventDetailsData);
-        // await getRapidapiApiData();
-        // await getNewsapiApiData();
+        await getSportsdataApiData();
+        getFigthersNames(eventDetailsData);
+        await getRapidapiApiData();
+        await getNewsapiApiData();
 
         if (process.env.LOCAL_MONGODB_USER && process.env.LOCAL_MONGODB_URI && process.env.LOCAL_MONGODB_PASSWORD) {
 
@@ -163,13 +163,13 @@ const launchUpdateDatabase = async () => {
                 console.log('Connecté à MongoDB => local');
             });
 
-            // await EventModel.deleteMany();
-            // await FighterModel.deleteMany();
-            // await UfcNewsModel.deleteMany();
+            await EventModel.deleteMany();
+            await FighterModel.deleteMany();
+            await UfcNewsModel.deleteMany();
 
-            // await EventModel.insertMany(eventDetailsData);
-            // await FighterModel.insertMany(fighterDetailsData);
-            // await UfcNewsModel.insertMany(ufcNewsArticles);
+            await EventModel.insertMany(eventDetailsData);
+            await FighterModel.insertMany(fighterDetailsData);
+            await UfcNewsModel.insertMany(ufcNewsArticles);
 
             db.close();
 
@@ -192,13 +192,13 @@ const launchUpdateDatabase = async () => {
                 console.log('Connecté à MongoDB => Prod');
             });
 
-            // await EventModel.deleteMany();
-            // await FighterModel.deleteMany();
-            // await UfcNewsModel.deleteMany();
+            await EventModel.deleteMany();
+            await FighterModel.deleteMany();
+            await UfcNewsModel.deleteMany();
 
-            // await EventModel.insertMany(eventDetailsData);
-            // await FighterModel.insertMany(fighterDetailsData);
-            // await UfcNewsModel.insertMany(ufcNewsArticles);
+            await EventModel.insertMany(eventDetailsData);
+            await FighterModel.insertMany(fighterDetailsData);
+            await UfcNewsModel.insertMany(ufcNewsArticles);
 
             db.close();
         }
