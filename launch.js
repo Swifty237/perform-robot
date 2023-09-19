@@ -72,7 +72,6 @@ const getSportsdataApiData = async () => {
         const response = await fetch(apiEventDetailsUrl);
         const eventDetails = await response.json();
 
-        console.log(eventDetails);
         eventDetailsData.push(eventDetails);
     }
 }
