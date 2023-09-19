@@ -1,57 +1,9 @@
-import express from 'express';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import EventModel from './models/event-model.js';
 import FighterModel from './models/fighter-model.js';
 import UfcNewsModel from './models/ufc-news-model.js';
 import dotenv from 'dotenv';
 dotenv.config();
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const app = express();
-
-//support parsing of JSON post data
-const jsonParser = express.json({ extended: true });
-app.use(jsonParser);
-
-app.use(express.static(__dirname));
-
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", process.env.ALLOWED_ACCESS_URI);
-    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, PATCH");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-    if (req.method === "OPTIONS") {
-        res.header("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE");
-        //to give access to all the methods provided
-        return res.status(200).json({});
-    }
-    next();
-});
-
-const mongoDbUrl = process.env.MONGODB_URI;
-
-// mongoose.connect(mongoDbUrl);
-
-// Connexion à la base de données MongoDB
-mongoose.connect(mongoDbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    authSource: process.env.MONGODB_AUTH_SOURCE ? process.env.MONGODB_AUTH_SOURCE : "",
-    user: process.env.MONGODB_USER ? process.env.MONGODB_USER : "",
-    pass: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD : "",
-    dbName: process.env.MONGODB_DBNAME ? process.env.MONGODB_DBNAME : ""
-});
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'Erreur de connexion à MongoDB :'));
-db.once('open', () => {
-    console.log('Connecté à MongoDB');
-});
 
 let fighters = [];
 let eventsData = [];
@@ -71,30 +23,34 @@ const getYears = () => {
 
 const getFigthersNames = (tabJson) => {
 
-    tabJson.map(tabElt => {
+    if (tabJson != []) {
+        tabJson.map(tabElt => {
 
-        tabElt.Fights.map(fightElt => {
+            tabElt.Fights.map(fightElt => {
 
-            fightElt.Fighters.map(fighter => {
+                fightElt.Fighters.map(fighter => {
 
-                const found = fighters.find(elt => elt.FighterId === fighter.FighterId);
+                    const found = fighters.find(elt => elt.FighterId === fighter.FighterId);
 
-                if (!found) {
-                    const newElement = {
-                        FighterId: fighter.FighterId,
-                        FirstName: fighter.FirstName,
-                        LastName: fighter.LastName
+                    if (!found) {
+                        const newElement = {
+                            FighterId: fighter.FighterId,
+                            FirstName: fighter.FirstName,
+                            LastName: fighter.LastName
+                        }
+                        fighters.push(newElement);
                     }
-                    fighters.push(newElement);
-                }
+                })
             })
         })
-    })
+    } else {
+        console.log("eventDetailsData is empty");
+    }
 }
 
 const getSportsdataApiData = async () => {
 
-    // console.log("Fetch api.sportsdata.io...");
+    console.log("Fetch api.sportsdata.io...");
 
     // for (let year of getYears()) {
 
@@ -103,18 +59,12 @@ const getSportsdataApiData = async () => {
     const events = await response.json();
 
     if (events) {
-        eventsData.push(events);
+        for (let event of events) {
+            eventsData.push(event);
+        }
     } else {
         console.error("Erreur lors de la création de eventsData : " + events);
     }
-
-    // if (events) {
-    //     for (let event of events) {
-    //         eventsData.push(event);
-    //     }
-    // } else {
-    //     console.error("Erreur lors de la création de eventsData : " + events);
-    // }
     // }
 
     for (let event of eventsData) {
@@ -129,7 +79,7 @@ const getSportsdataApiData = async () => {
 
 const getRapidapiApiData = async () => {
 
-    // console.log("Fetch mma-stats.p.rapidapi.com...");
+    console.log("Fetch mma-stats.p.rapidapi.com...");
 
     for (let fighter of fighters) {
 
@@ -164,7 +114,7 @@ const getRapidapiApiData = async () => {
 
 const getNewsapiApiData = async () => {
 
-    // console.log("Fetch newsapi.org/v2...");
+    console.log("Fetch newsapi.org/v2...");
 
     const apiUfcNews = 'https://newsapi.org/v2/everything?q=ufc&from=2023&sources=espn';
     const options = {
@@ -183,15 +133,35 @@ const getNewsapiApiData = async () => {
     }
 }
 
-app.get('/update', async (req, res) => {
+const launchUpdateDatabase = async () => {
 
     try {
 
         await getSportsdataApiData();
-        // console.log("Premier élément de eventDetailsData : " + eventDetailsData[0]);
         getFigthersNames(eventDetailsData);
         await getRapidapiApiData();
         await getNewsapiApiData();
+
+        const mongoDbUrl = process.env.MONGODB_URI;
+
+        // mongoose.connect(mongoDbUrl);
+
+        // Connexion à la base de données MongoDB
+        mongoose.connect(mongoDbUrl, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            authSource: process.env.MONGODB_AUTH_SOURCE ? process.env.MONGODB_AUTH_SOURCE : "",
+            user: process.env.MONGODB_USER ? process.env.MONGODB_USER : "",
+            pass: process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD : "",
+            dbName: process.env.MONGODB_DBNAME ? process.env.MONGODB_DBNAME : ""
+        });
+
+        const db = mongoose.connection;
+
+        db.on('error', console.error.bind(console, 'Erreur de connexion à MongoDB :'));
+        db.once('open', () => {
+            console.log('Connecté à MongoDB');
+        });
 
         await EventModel.deleteMany();
         await FighterModel.deleteMany();
@@ -201,21 +171,12 @@ app.get('/update', async (req, res) => {
         await FighterModel.insertMany(fighterDetailsData);
         await UfcNewsModel.insertMany(ufcNewsArticles);
 
-        res.json({ message: 'Database updated' })
-
-        eventsData = [];
-        eventDetailsData = [];
-        fighters = [];
-        fighterDetailsData = [];
-        ufcNewsArticles = [];
+        db.close();
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour :', error);
         res.status(500).json({ error: 'Erreur lors de la mise à jour' });
     }
+}
 
-});
-
-app.listen(process.env.BOT_ACCESS_PORT, () => {
-    console.log(process.env.BOT_ACCESS_URI);
-});
+export default launchUpdateDatabase;
