@@ -1,10 +1,11 @@
 stages:
   - dregistry
-  - deploy
+  - ldeploy
+  - pdeploy
 
 local:
   image: node:18.17.1
-  stage: deploy
+  stage: ldeploy
   script:
     - npm install
     - export MONGODB_AUTH_SOURCE=admin
@@ -16,7 +17,7 @@ local:
 
 prod:
   image: node:18.17.1
-  stage: deploy
+  stage: pdeploy
   script:
     - npm install
     - MONGODB_AUTH_SOURCE=$MONGODB_AUTH_SOURCE
