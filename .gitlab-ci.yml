@@ -1,10 +1,10 @@
 stages:
-  - pdeploy
-  - dregistry
+  - deploy
+  - push
   
 prod:
   image: node:18.17.1
-  stage: pdeploy
+  stage: deploy
   script:
     - npm install
     - MONGODB_AUTH_SOURCE=$MONGODB_AUTH_SOURCE
@@ -17,8 +17,8 @@ prod:
     - export NEWSAPI_API_KEY=$NEWSAPI_API_KEY
     - node index.js
 
-push:
-  stage: dregistry
+docker-push:
+  stage: push
   image: docker:latest
   services:
     - docker:dind 
