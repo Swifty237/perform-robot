@@ -15,7 +15,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 getMongooseConnection();
 
-const mongodbEvents = getMongodbEvents();
+const mongodbEvents = await getMongodbEvents();
 
 let eventsData = [];
 let eventDetailsData = [];
@@ -129,12 +129,12 @@ const getNewsapiApiData = async () => {
 
 const launchUpdateDatabase = async () => {
 
-    const mongodbFighters = getMongodbFighters();
+    const mongodbFighters = await getMongodbFighters();
 
     try {
 
-        // await getSportsdataApiData();
-        // await getRapidapiApiData();
+        await getSportsdataApiData();
+        await getRapidapiApiData();
         await getNewsapiApiData();
 
         for (let fighter of fighterDetailsData) {
@@ -145,8 +145,8 @@ const launchUpdateDatabase = async () => {
 
         await UfcNewsModel.deleteMany();
 
-        // await EventModel.insertMany(eventDetailsData);
-        // await FighterModel.insertMany(fighterDetailsData);
+        await EventModel.insertMany(eventDetailsData);
+        await FighterModel.insertMany(fighterDetailsData);
         await UfcNewsModel.insertMany(ufcNewsArticles);
 
     } catch (error) {
