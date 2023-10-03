@@ -16,6 +16,8 @@ prod:
     - export RAPIDAPI_API_KEY2=$RAPIDAPI_API_KEY2
     - export NEWSAPI_API_KEY=$NEWSAPI_API_KEY
     - node index.js
+  rules:
+    - when: manual
 
 docker-push:
   stage: push
