@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import EventModel from './models/event-model.js';
 import FighterModel from './models/fighter-model.js';
 import UfcNewsModel from './models/ufc-news-model.js';
@@ -8,12 +7,12 @@ import {
     getYears,
     getMongodbEvents,
     getFigtherIds,
-    getMongodbFighters
+    getMongodbFighters,
 } from './utils/fucntions.js'
 import dotenv from 'dotenv';
 
 dotenv.config();
-getMongooseConnection();
+const db = getMongooseConnection();
 
 const mongodbEvents = await getMongodbEvents();
 
@@ -33,26 +32,42 @@ const getSportsdataApiData = async () => {
     const response = await fetch(apiEventsUrl);
     const events = await response.json();
 
-    if (mongodbEvents[0].EventId) {
+    if (mongodbEvents[0]) {
         const mongodbEventIds = [];
+
+        console.log("mongodb non null");
 
         for (let mongodbEvent of mongodbEvents) {
             mongodbEventIds.push(mongodbEvent.EventId)
+        }
 
-            if (events[0].EventId) {
-                for (let event of events) {
+        console.log(mongodbEventIds);
 
-                    if (!mongodbEventIds.includes(event.EventId)) {
-                        eventsData.push(event);
-                    }
+        if (events[0]) {
+
+            for (let event of events) {
+
+                if (!mongodbEventIds.includes(event.EventId)) {
+
+                    console.log("event.EventId not include : " + event.EventId);
+                    eventsData.push(event);
+
+                } else {
+                    console.log("event.EventId include : " + event.EventId);
                 }
             }
+
+        } else {
+            console.error("Erreur lors de la création de eventsData : " + events);
         }
 
     } else {
 
-        if (events[0].EventId) {
+        console.log("mongodb null");
+
+        if (events[0]) {
             for (let event of events) {
+                console.log(event.EventId);
                 eventsData.push(event);
             }
 
@@ -64,7 +79,7 @@ const getSportsdataApiData = async () => {
     // }
 
     for (let event of eventsData) {
-        const apiEventDetailsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Event/' + event.EventId + '?key=' + process.env.SPORTSDATA_API_KEY;
+        const apiEventDetailsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Event/' + event.EventId + '?key=' + process.env.SPORTSDATA_API_KEY2;
         const response = await fetch(apiEventDetailsUrl);
         const eventDetails = await response.json();
 
@@ -101,7 +116,7 @@ const getRapidapiApiData = async () => {
                 fighterDetailsData.push(fighterDetail);
             }
         } else {
-            console.log(fighterDetails.error + " : " + fighter.FirstName + "" + fighter.LastName);
+            console.log(fighterDetails.error + " : " + fighter.FirstName + " " + fighter.LastName);
         }
     }
 }
@@ -137,22 +152,35 @@ const launchUpdateDatabase = async () => {
         await getRapidapiApiData();
         await getNewsapiApiData();
 
-        for (let fighter of fighterDetailsData) {
-            if (getFigtherIds(mongodbFighters).includes(fighter.FighterId)) {
-                await FighterModel.deleteOne(fighter);
+        if (mongodbFighters[0]) {
+            for (let fighter of fighterDetailsData) {
+                if (getFigtherIds(mongodbFighters).includes(fighter.FighterId)) {
+                    // console.log(fighter);
+
+                    await FighterModel.deleteOne({ FighterId: fighter.FighterId });
+                    await FighterModel.create(fighter);
+
+                } else {
+                    // console.log(fighter);
+                    await FighterModel.create(fighter);
+                }
             }
+        } else {
+
+            await FighterModel.insertMany(fighterDetailsData);
         }
 
         await UfcNewsModel.deleteMany();
 
         await EventModel.insertMany(eventDetailsData);
-        await FighterModel.insertMany(fighterDetailsData);
         await UfcNewsModel.insertMany(ufcNewsArticles);
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour :', error);
         res.status(500).json({ error: 'Erreur lors de la mise à jour' });
     }
+
+    db.close();
 }
 
 export default launchUpdateDatabase;

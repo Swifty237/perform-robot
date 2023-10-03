@@ -25,7 +25,7 @@ export const FighterIdentities = (tabJson) => {
 
     const fighterNames = [];
 
-    if (tabJson != []) {
+    if (tabJson[0]) {
 
         for (let elt of tabJson) {
 
@@ -67,6 +67,7 @@ export const FighterIdentities = (tabJson) => {
 
     } else {
         console.log("eventDetailsData is empty");
+        return [];
     }
 }
 
