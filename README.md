@@ -4,7 +4,7 @@ perform-robot
 
 # Description
 
-Perform-robot is a REST API which was designed with node js to be part of a set of separate bricks and micro services which communicate with each other as needed. This set of bricks and micro services constitute the architecture of an application named perform MMA. Perform-robot is use to update the mongodb database of the web application. This database contains a whole set of data used in the construction of the different pages of the web application.
+Perform-robot is a REST API which was designed with node js to be part of a set of separate bricks and micro services which communicate with each other as needed. This set of bricks and micro services constitute the architecture of an application named perform MMA. Perform-robot is programmed to download data via APIs that we specify and fill the mongodb database of my web application.
 
 Click on the following link for more details on Perform MMA web application =>
 <a href="https://docs.google.com/presentation/d/e/2PACX-1vSzRUSTdUaM2xpnRheKOzhWK3UeApCFwF-Qn_Nl0KEetrUcBNHhpZ1nt6GdtnWPDutZzQquVGiIEMkr/pub?start=false&loop=false&delayms=3000">Perform MMA presentation</a> <br>
@@ -31,21 +31,31 @@ Clone the project and open it with your favorite text editor, I used eclipse.
 
 # Local utilisation
 
-Set the following environment variables to allow connection to the database and grant CORS permissions to your front interface : 
+Create API keys for the following sites:
 
-* LOCAL_BACK_NODE_ACCESS_URI => your node backend URI 
-* LOCAL_BACK_NODE_ACCESS_PORT => your node backend port
+* <a href="https://sportsdata.io/developers/api-documentation/mma#/sports-data">sportdata</a>
+* <a href="https://rapidapi.com/chirikutsikuda/api/mma-stats/">rapidapi</a>
+* <a href="https://newsapi.org/">newsapi</a>
+
+
+Set the following environment variables : 
+
 * LOCAL_MONGODB_URI => your database URI
 * LOCAL_MONGODB_USER => your database username
 * LOCAL_MONGODB_PASSWORD => your database password
 * LOCAL_MONGODB_DBNAME => database name
 
-* MONGODB_AUTH_SOURCE => admin
-* FRONT_URI => your frontend URI
+* SPORTSDATA_API_KEY => your api key for sportdata
+* SPORTSDATA_API_KEY2 => your second api key sportdata
+* RAPIDAPI_API_KEY => your api key for rapidapi
+* RAPIDAPI_API_KEY2 => your second api key for rapidapi
+* NEWSAPI_API_KEY => your api key for newsapi
+
+NB : You don't necessarily need 2 API keys for sportdata or rapid API, just one is enough if you don't have a huge number of requests to make
 
 Run the following commands : 
 
-* node server.js
+* node index.js
 
 # Contact
 
