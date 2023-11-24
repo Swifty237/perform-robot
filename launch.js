@@ -19,7 +19,9 @@ const mongodbEvents = await getMongodbEvents();
 let eventsData = [];
 let eventDetailsData = [];
 let fighterDetailsData = [];
-let ufcNewsArticles = [];
+let espnArticles = [];
+let businessInsiderArticles = [];
+let bleacherReporterArticles = [];
 
 
 const getSportsdataApiData = async () => {
@@ -121,9 +123,9 @@ const getRapidapiApiData = async () => {
     }
 }
 
-const getNewsapiApiData = async () => {
+const getEpsnNewsApiData = async () => {
 
-    console.log("Fetch newsapi.org/v2...");
+    console.log("Fetch espn...");
 
     const apiUfcNews = 'https://newsapi.org/v2/everything?q=ufc&from=2023&sources=espn';
     const options = {
@@ -138,7 +140,49 @@ const getNewsapiApiData = async () => {
     console.log("status : " + ufcNews.status);
 
     if (ufcNews.status == "ok") {
-        ufcNewsArticles = ufcNews.articles;
+        espnArticles = ufcNews.articles;
+    }
+}
+
+const getBusinessInsiderNewsApiData = async () => {
+
+    console.log("Fetch business-insider...");
+
+    const apiUfcNews = 'https://newsapi.org/v2/everything?q=ufc&from=2023&sources=business-insider';
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-Api-Key': process.env.NEWSAPI_API_KEY,
+        }
+    };
+    const response = await fetch(apiUfcNews, options);
+    let ufcNews = await response.json();
+
+    console.log("status : " + ufcNews.status);
+
+    if (ufcNews.status == "ok") {
+        businessInsiderArticles = ufcNews.articles;
+    }
+}
+
+const getBleacherReportNewsApiData = async () => {
+
+    console.log("Fetch bleacher-report...");
+
+    const apiUfcNews = 'https://newsapi.org/v2/everything?q=ufc&from=2023&sources=bleacher-report';
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-Api-Key': process.env.NEWSAPI_API_KEY,
+        }
+    };
+    const response = await fetch(apiUfcNews, options);
+    let ufcNews = await response.json();
+
+    console.log("status : " + ufcNews.status);
+
+    if (ufcNews.status == "ok") {
+        bleacherReporterArticles = ufcNews.articles;
     }
 }
 
@@ -150,7 +194,9 @@ const launchUpdateDatabase = async () => {
 
         await getSportsdataApiData();
         await getRapidapiApiData();
-        await getNewsapiApiData();
+        await getEpsnNewsApiData();
+        await getBusinessInsiderNewsApiData();
+        await getBleacherReportNewsApiData();
 
         if (mongodbFighters[0]) {
             for (let fighter of fighterDetailsData) {
@@ -173,7 +219,9 @@ const launchUpdateDatabase = async () => {
         await UfcNewsModel.deleteMany();
 
         await EventModel.insertMany(eventDetailsData);
-        await UfcNewsModel.insertMany(ufcNewsArticles);
+        await UfcNewsModel.insertMany(espnArticles);
+        await UfcNewsModel.insertMany(businessInsiderArticles);
+        await UfcNewsModel.insertMany(bleacherReporterArticles);
 
     } catch (error) {
         console.error('Erreur lors de la mise à jour :', error);
