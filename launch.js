@@ -30,7 +30,7 @@ const getSportsdataApiData = async () => {
 
     // for (let year of getYears()) {
 
-    const apiEventsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Schedule/UFC/' + 2023 + '?key=' + process.env.SPORTSDATA_API_KEY;
+    const apiEventsUrl = 'https://api.sportsdata.io/v3/mma/scores/json/Schedule/UFC/' + 2024 + '?key=' + process.env.SPORTSDATA_API_KEY;
     const response = await fetch(apiEventsUrl);
     const events = await response.json();
 
